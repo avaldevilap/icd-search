@@ -1,0 +1,61 @@
+---
+import { createForm } from "simple:form";
+import { Markup } from "astro-remote";
+import { createRegExp, digit, oneOrMore } from "magic-regexp";
+import { ofetch } from "ofetch";
+import z from "zod";
+
+export const partial = true;
+
+const search = createForm({
+    q: z.string(),
+});
+
+const regex = createRegExp(oneOrMore(digit));
+
+const searchResult = await Astro.locals.form.getData(search);
+
+const data = await ofetch("https://id.who.int/icd/entity/search", {
+    headers: {
+        Authorization: `Bearer ${Astro.locals.token}`,
+        "API-Version": "v2",
+        "Accept-Language": "es",
+    },
+    params: {
+        q: searchResult?.data?.q,
+        useFlexisearch: false,
+        flatResults: false,
+        highlightingEnabled: true,
+    },
+});
+console.log(data);
+---
+
+{
+    data.destinationEntities?.map((item) => (
+        <li
+            class="group list-none border rounded-lg hover:bg-secondary/30 focus:bg-secondary/30 hover:text-primary focus:ring-2 focus:ring-secondary"
+            title={item.title}
+        >
+            <div class="w-full rounded-lg p-6">
+                <h2 class="text-xl font-semibold">
+                    <Markup content={item.title} />
+                </h2>
+
+                <div
+                    hx-post="/partials/entity-code"
+                    hx-vals={`{ "foundationUri": "${item.id}" }`}
+                    hx-swap="outerHTML"
+                    hx-trigger="load"
+                />
+
+                <div
+                    hx-post="/partials/entity"
+                    hx-vals={`{ "entityId": "${item.id.match(regex)}" }`}
+                    hx-swap="outerHTML"
+                    hx-trigger="load"
+                />
+            </div>
+        </li>
+    ))
+}
