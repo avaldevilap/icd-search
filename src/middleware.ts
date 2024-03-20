@@ -1,5 +1,4 @@
 import type { MiddlewareHandler } from 'astro';
-import { ofetch } from 'ofetch';
 
 export const onRequest: MiddlewareHandler = async ({ locals }, next) => {
   if (!locals.token) {
@@ -9,11 +8,7 @@ export const onRequest: MiddlewareHandler = async ({ locals }, next) => {
       }`,
     );
 
-    const { access_token } = await ofetch<{
-      access_token: string;
-      expires_in: number;
-      token_type: string;
-    }>('https://icdaccessmanagement.who.int/connect/token', {
+    await fetch('https://icdaccessmanagement.who.int/connect/token', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${basic}`,
@@ -23,13 +18,12 @@ export const onRequest: MiddlewareHandler = async ({ locals }, next) => {
         grant_type: 'client_credentials',
         scope: 'icdapi_access',
       }),
-      ignoreResponseError: true,
-      onResponseError({ response }) {
-        locals.error = response._data;
-      },
-    });
-
-    locals.token = access_token;
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        locals.token = response.access_token;
+      })
+      .catch((err) => console.error(err));
   }
   return next();
 };
