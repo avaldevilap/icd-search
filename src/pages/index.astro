@@ -19,7 +19,12 @@ import "../tailwind.css";
 			hx-post="/partials/search-results"
 			hx-target="#search-results"
 		>
-			<input type="search" name="q" placeholder="Search" />
+			<input
+				type="search"
+				name="q"
+				placeholder="Search"
+				inputmode="search"
+			/>
 			<button class="sr-only">Search</button>
 		</form>
 
