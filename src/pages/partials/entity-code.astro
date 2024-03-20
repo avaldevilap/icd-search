@@ -1,0 +1,31 @@
+---
+import { ofetch } from "ofetch";
+
+export const partial = true;
+
+let foundationUri = "";
+let data = undefined;
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    foundationUri = formData.get("foundationUri") as string;
+}
+
+if (foundationUri) {
+    data = await ofetch(
+        "https://id.who.int/icd/release/11/2024-01/mms/lookup",
+        {
+            headers: {
+                Authorization: `Bearer ${Astro.locals.token}`,
+                "API-Version": "v2",
+                "Accept-Language": "es",
+            },
+            params: {
+                foundationUri,
+            },
+        },
+    );
+}
+---
+
+<p class="font-bold text-2xl">{data?.code}</p>

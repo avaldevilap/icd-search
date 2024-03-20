@@ -1,0 +1,44 @@
+---
+import { ofetch } from "ofetch";
+import type { FoundationEntityResponse } from "~/types";
+
+export const partial = true;
+
+let entityId = "";
+let data: FoundationEntityResponse = undefined;
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    entityId = formData.get("entityId") as string;
+}
+
+if (entityId) {
+    data = await ofetch<FoundationEntityResponse>(
+        `https://id.who.int/icd/entity/${entityId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${Astro.locals.token}`,
+                "API-Version": "v2",
+                "Accept-Language": "es",
+            },
+            params: {
+                useFlexisearch: false,
+                flatResults: false,
+                highlightingEnabled: true,
+            },
+        },
+    );
+}
+---
+
+<p class="text-base text-balance leading-5">{data?.definition?.["@value"]}</p>
+<p class="text-sm font-semibold mt-2">Synonym</p>
+<ul class="list-none flex flex-wrap gap-x-2" role="list">
+    {
+        data?.synonym?.map(({ label }) => (
+            <li class="text-xs" lang={label["@language"]}>
+                {label["@value"]}
+            </li>
+        ))
+    }
+</ul>
