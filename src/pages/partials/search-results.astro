@@ -1,34 +1,35 @@
 ---
-import { createForm } from "simple:form";
 import { Markup } from "astro-remote";
 import { createRegExp, digit, oneOrMore } from "magic-regexp";
 import { ofetch } from "ofetch";
-import z from "zod";
+import type { SearchResultResponse } from "~/types";
 
 export const partial = true;
 
-const search = createForm({
-    q: z.string(),
-});
-
+let q = "";
 const regex = createRegExp(oneOrMore(digit));
 
-const searchResult = await Astro.locals.form.getData(search);
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    q = formData.get("q") as string;
+}
 
-const data = await ofetch("https://id.who.int/icd/entity/search", {
-    headers: {
-        Authorization: `Bearer ${Astro.locals.token}`,
-        "API-Version": "v2",
-        "Accept-Language": "es",
+const data = await ofetch<SearchResultResponse>(
+    "https://id.who.int/icd/entity/search",
+    {
+        headers: {
+            Authorization: `Bearer ${Astro.locals.token}`,
+            "API-Version": "v2",
+            "Accept-Language": "es",
+        },
+        params: {
+            q,
+            useFlexisearch: false,
+            flatResults: false,
+            highlightingEnabled: true,
+        },
     },
-    params: {
-        q: searchResult?.data?.q,
-        useFlexisearch: false,
-        flatResults: false,
-        highlightingEnabled: true,
-    },
-});
-console.log(data);
+);
 ---
 
 {
@@ -39,7 +40,7 @@ console.log(data);
         >
             <div class="w-full rounded-lg p-6">
                 <h2 class="text-xl font-semibold">
-                    <Markup content={item.title} />
+                    <Markup content={item.title ?? ""} />
                 </h2>
 
                 <div
@@ -51,7 +52,7 @@ console.log(data);
 
                 <div
                     hx-post="/partials/entity"
-                    hx-vals={`{ "entityId": "${item.id.match(regex)}" }`}
+                    hx-vals={`{ "entityId": "${item?.id?.match(regex)}" }`}
                     hx-swap="outerHTML"
                     hx-trigger="load"
                 />

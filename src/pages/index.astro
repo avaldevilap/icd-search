@@ -16,10 +16,8 @@ import "../tailwind.css";
 
 		<form
 			class="flex"
-			method="post"
 			hx-post="/partials/search-results"
 			hx-target="#search-results"
-			hx-swap="innerHTML"
 		>
 			<input type="search" name="q" placeholder="Search" />
 			<button class="sr-only">Search</button>

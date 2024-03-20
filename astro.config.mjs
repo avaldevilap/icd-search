@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import { MagicRegExpTransformPlugin } from 'magic-regexp/transform';
 import simpleStackForm from 'simple-stack-form';
 
+import node from '@astrojs/node';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -10,4 +12,7 @@ export default defineConfig({
     plugins: [tailwindcss(), MagicRegExpTransformPlugin.vite()],
   },
   integrations: [simpleStackForm()],
+  adapter: node({
+    mode: 'standalone',
+  }),
 });
