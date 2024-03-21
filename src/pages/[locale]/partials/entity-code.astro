@@ -15,10 +15,11 @@ if (foundationUri) {
     data = await ofetch(
         "https://id.who.int/icd/release/11/2024-01/mms/lookup",
         {
+            ignoreResponseError: true,
             headers: {
                 Authorization: `Bearer ${Astro.locals.token}`,
                 "API-Version": "v2",
-                "Accept-Language": "es",
+                "Accept-Language": Astro.currentLocale || "es",
             },
             params: {
                 foundationUri,

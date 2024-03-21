@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { Markup } from "astro-remote";
 import { createRegExp, digit, oneOrMore } from "magic-regexp";
 import { ofetch } from "ofetch";
@@ -20,7 +21,7 @@ const data = await ofetch<SearchResultResponse>(
         headers: {
             Authorization: `Bearer ${Astro.locals.token}`,
             "API-Version": "v2",
-            "Accept-Language": "es",
+            "Accept-Language": Astro.currentLocale || "es",
         },
         params: {
             q,
@@ -44,14 +45,20 @@ const data = await ofetch<SearchResultResponse>(
                 </h2>
 
                 <div
-                    hx-post="/partials/entity-code"
+                    hx-post={getRelativeLocaleUrl(
+                        Astro.currentLocale || "es",
+                        "/partials/entity-code",
+                    )}
                     hx-vals={`{ "foundationUri": "${item.id}" }`}
                     hx-swap="outerHTML"
                     hx-trigger="load"
                 />
 
                 <div
-                    hx-post="/partials/entity"
+                    hx-post={getRelativeLocaleUrl(
+                        Astro.currentLocale || "es",
+                        "/partials/entity",
+                    )}
                     hx-vals={`{ "entityId": "${item?.id?.match(regex)}" }`}
                     hx-swap="outerHTML"
                     hx-trigger="load"

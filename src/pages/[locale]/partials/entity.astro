@@ -19,7 +19,7 @@ if (entityId) {
             headers: {
                 Authorization: `Bearer ${Astro.locals.token}`,
                 "API-Version": "v2",
-                "Accept-Language": "es",
+                "Accept-Language": Astro.currentLocale || "es",
             },
             params: {
                 useFlexisearch: false,

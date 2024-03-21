@@ -1,7 +1,12 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Markdown } from "astro-remote";
 import LanguagePicker from "~/components/LanguagePicker.astro";
+import { type Language, useTranslations } from "~/i18n/utils";
 import Layout from "~/layouts/Layout.astro";
-import "../tailwind.css";
+import "~/tailwind.css";
+
+const t = useTranslations((Astro.currentLocale as Language) || "es");
 ---
 
 <Layout title="ICD Search">
@@ -12,18 +17,21 @@ import "../tailwind.css";
 			<p
 				class="uppercase text-center text-pretty leading-4 text-xs font-medium font-mono"
 			>
-				Unlock the ICD:<br /> Your Fast and Easy Search for Medical Codes
+				{t("home.subtitle")}
 			</p>
 			<h1
 				class="mt-1 text-5xl font-bold text-center text-neutral-dark font-sans"
 			>
-				ICD Search
+				{t("home.title")}
 			</h1>
 		</header>
 
 		<form
 			class="grid gap-2"
-			hx-post="/partials/search-results"
+			hx-post={getRelativeLocaleUrl(
+				Astro.currentLocale || "es",
+				"/partials/search-results",
+			)}
 			hx-target="#search-results"
 		>
 			<label>
@@ -31,19 +39,16 @@ import "../tailwind.css";
 				<input
 					type="search"
 					name="q"
-					placeholder="Search"
+					placeholder={t("home.search-input.placeholder")}
 					inputmode="search"
 				/>
 			</label>
 
 			<button class="sr-only">Search</button>
 
-			<p class="text-xs text-center text-pretty">
-				Whether you're a doctor, coder, researcher, or simply looking
-				for medical information, our ICD search website is your one-stop
-				shop for navigating the world of medical codes. Start your
-				search today and experience the difference!
-			</p>
+			<div class="text-xs text-center text-pretty">
+				<Markdown content={t("home.search-input.info")} />
+			</div>
 		</form>
 
 		<ul class="grid gap-4 p-0" role="list" id="search-results"></ul>
