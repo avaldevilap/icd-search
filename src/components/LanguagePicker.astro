@@ -1,0 +1,19 @@
+---
+import { getRelativeLocaleUrlList } from "astro:i18n";
+---
+
+<nav class="uppercase flex divide-x items-center justify-center">
+    {
+        getRelativeLocaleUrlList(Astro.url.pathname.slice(3)).map((url) => (
+            <a
+                class="px-2"
+                class:list={[
+                    Astro.currentLocale === url.slice(1, 3) ? "font-bold" : "",
+                ]}
+                href={url}
+            >
+                {url.slice(1, 3)}
+            </a>
+        ))
+    }
+</nav>
