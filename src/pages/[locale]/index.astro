@@ -1,6 +1,7 @@
 ---
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { Markdown } from "astro-remote";
+import Input from "~/components/Input.astro";
 import LanguagePicker from "~/components/LanguagePicker.astro";
 import { type Language, useTranslations } from "~/i18n/utils";
 import Layout from "~/layouts/Layout.astro";
@@ -15,7 +16,7 @@ const t = useTranslations((Astro.currentLocale as Language) || "es");
 
 		<header>
 			<p
-				class="uppercase text-center text-pretty leading-4 text-xs font-medium font-mono"
+				class="uppercase text-center text-pretty leading-4 text-xs font-medium font-mono text-neutral-500"
 			>
 				{t("home.subtitle")}
 			</p>
@@ -36,7 +37,7 @@ const t = useTranslations((Astro.currentLocale as Language) || "es");
 		>
 			<label>
 				<span class="sr-only">Search</span>
-				<input
+				<Input
 					type="search"
 					name="q"
 					placeholder={t("home.search-input.placeholder")}
@@ -46,11 +47,12 @@ const t = useTranslations((Astro.currentLocale as Language) || "es");
 
 			<button class="sr-only">Search</button>
 
-			<div class="text-xs text-center text-pretty">
+			<div class="text-xs text-center text-pretty text-neutral-500">
 				<Markdown content={t("home.search-input.info")} />
 			</div>
 		</form>
 
-		<ul class="grid gap-4 p-0" role="list" id="search-results"></ul>
+		<ul class="grid gap-4 p-0 max-w-full" role="list" id="search-results">
+		</ul>
 	</main>
 </Layout>

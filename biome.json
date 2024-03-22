@@ -9,7 +9,15 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": {
+            "attributes": ["classList"]
+          }
+        }
+      }
     }
   },
   "formatter": {
@@ -17,9 +25,6 @@
     "indentStyle": "space"
   },
   "javascript": {
-    "globals": ["Astro"],
-    "formatter": {
-      "quoteStyle": "single"
-    }
+    "globals": ["Astro"]
   }
 }

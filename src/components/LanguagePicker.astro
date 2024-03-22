@@ -2,11 +2,11 @@
 import { getRelativeLocaleUrlList } from "astro:i18n";
 ---
 
-<nav class="uppercase flex divide-x items-center justify-center">
+<nav class="uppercase divide-x bg-white rounded-full w-max p-1 shadow mx-auto">
     {
         getRelativeLocaleUrlList(Astro.url.pathname.slice(3)).map((url) => (
             <a
-                class="px-2"
+                class="px-2 outline-emerald-500"
                 class:list={[
                     Astro.currentLocale === url.slice(1, 3) ? "font-bold" : "",
                 ]}
