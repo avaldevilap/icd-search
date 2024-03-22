@@ -4,7 +4,9 @@ import { getRelativeLocaleUrlList } from "astro:i18n";
 
 <nav class="uppercase divide-x bg-white rounded-full w-max p-1 shadow mx-auto">
     {
-        getRelativeLocaleUrlList(Astro.url.pathname.slice(3)).map((url) => (
+        getRelativeLocaleUrlList(
+            Astro.url.pathname.slice(3) + Astro.url.search,
+        ).map((url) => (
             <a
                 class="px-2 outline-emerald-500"
                 class:list={[
