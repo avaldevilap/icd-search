@@ -36,7 +36,7 @@ if (entityId) {
 <ul class="list-none flex flex-wrap gap-x-2" role="list">
     {
         data?.synonym?.map(({ label }) => (
-            <li class="text-xs" lang={label["@language"]}>
+            <li class="text-xs text-pretty" lang={label["@language"]}>
                 {label["@value"]}
             </li>
         ))
