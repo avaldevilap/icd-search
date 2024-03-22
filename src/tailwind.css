@@ -4,12 +4,10 @@
     --color-primary: hsl(205, 58%, 12%);
     --color-secondary: hsl(131, 60%, 58%);
     --color-accent: hsl(207, 47%, 93%);
-    --color-neutral-light: hsl(80, 10%, 94%);
-    --color-neutral-dark: hsl(0, 0%, 14%);
 }
 
-@layer components {
-    input[type=search] {
-        @apply w-full h-10 px-4 rounded-lg border-neutral-dark focus-within:outline-neutral-dark;
+@layer base {
+    * {
+        @apply border-neutral-200;
     }
 }
